@@ -1,5 +1,5 @@
 <template>
-  <div class="speech-recongnition" v-if="speechRecognition || forceRender">
+  <div class="speech-recognition" v-if="speechRecognition || forceRender">
     <div class="voice-animation" v-show="showWave">
       <div class="voice-bar" v-for="(_, index) in 5" :key="index" :style="{ animationDelay: `${index * 0.1}s` }"></div>
     </div>
@@ -56,10 +56,12 @@ onMounted(() => {
     recognition.onstart = () => {
       showWave.value = true;
       emits('recognition-start');
+      console.log('on start')
     };
 
     recognition.onnomatch = () => {
       emits('no-match')
+      console.log('on nomatch')
     };
 
     // 获取识别结果
@@ -67,6 +69,7 @@ onMounted(() => {
       const res = event.results[0]
       const isFinal = res.isFinal
       const transcript = res[0].transcript
+      console.log('on result', transcript)
       if (transcript) {
         emits('data', {
           isFinal: res.isFinal,
@@ -82,6 +85,7 @@ onMounted(() => {
       isStart.value = false;
       showWave.value = false;
       emits('recognition-end')
+      console.log('on end')
     };
 
     // 识别错误时的事件
